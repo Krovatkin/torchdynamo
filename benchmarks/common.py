@@ -1938,7 +1938,13 @@ def main(runner, original_dir=None):
             current_name = name
             placeholder_batch_size = 0
             try:
-                subprocess.check_call([sys.executable] + sys.argv + [f"--only={name}"])
+                out = subprocess.check_output(
+                    [sys.executable] + sys.argv + [f"--only={name}"],
+                    encoding="utf-8",
+                    stderr=subprocess.STDOUT,
+                )
+                with open(f"logs/{name}.log", 'w') as f:
+                    f.write(out)
             except subprocess.SubprocessError:
                 print("ERROR")
                 for device in args.devices:
